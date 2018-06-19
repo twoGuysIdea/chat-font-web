@@ -13,7 +13,7 @@
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">输入消息</label>
             <div class="layui-input-block">
-                <textarea placeholder="请输入内容" class="layui-textarea" id="sendMessage"></textarea>
+                <textarea class="layui-textarea" id="sendMsg"></textarea>
             </div>
         </div>
 
@@ -49,7 +49,7 @@
             };
             //获得消息事件
             socket.onmessage = function(msg) {
-                $("#getMessage").text(msg.data);
+                $("#getMessage").val(msg.data);
                 console.log(msg.data);
                 //发现消息进入    调后台获取
             };
@@ -64,8 +64,8 @@
             };
 
             $("#send").click(function(){
-                console.log($("#getMessage").text());
-                socket.send($("#getMessage").text());
+                var sendMsg = $("#sendMsg").val();
+                socket.send(sendMsg);
             });
 
             window.onunload = function(){
@@ -73,6 +73,10 @@
             };
         }
     });
+
+    function alertMsg(value) {
+        alert(value);
+    }
 
 </script>
 </html>
