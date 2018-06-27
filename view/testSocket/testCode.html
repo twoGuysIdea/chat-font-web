@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div class="layim-chat layim-chat-{{d.data.type}}{{d.first ? " layui-show" : ""}}">
+    <div class="layui-unselect layim-chat-title"><div class="layim-chat-other">
+        <img src="{{ d.data.avatar }}"><span class="layim-chat-username" layim-event="{{ d.data.type==="group" ? "groupMembers" : "" }}">{{ d.data.name||"佚名" }} {{d.data.temporary ? "
+        <cite>临时会话</cite>" : ""}} {{# if(d.data.type==="group"){ }} 
+        <em class="layim-chat-members">
+            
+        </em>
+        <i class="layui-icon">&#xe61a;</i> 
+        {{# } }}</span><p class="layim-chat-status">
+        
+    </p></div></div>
+    <div class="layim-chat-main">
+        <ul></ul></div>
+    <div class="layim-chat-footer">
+        <div class="layui-unselect layim-chat-tool" data-json="{{encodeURIComponent(JSON.stringify(d.data))}}">
+            <span class="layui-icon layim-tool-face" title="选择表情" layim-event="face">
+                &#xe60c;</span>{{# if(d.base && d.base.uploadImage){ }}
+            <span class="layui-icon layim-tool-image" title="上传图片" layim-event="image">
+                &#xe60d;<input type="file" name="file">
+            </span>{{# }; }}{{# if(d.base && d.base.uploadFile){ }
+            <span class="layui-icon layim-tool-image" title="发送文件" layim-event="image" data-type="file">&#xe61d;
+                <input type="file" name="file">
+            </span>{{# }; }}{{# layui.each(d.base.tool, function(index, item){ }}
+            <span class="layui-icon layim-tool-{{item.alias}}" title="{{item.title}}" layim-event="extend" lay-filter="{{ item.alias }}">{{item.icon}}
+            </span>{{# }); }}{{# if(d.base && d.base.chatLog){ }}
+            <span class="layim-tool-log" layim-event="chatLog">
+                <i class="layui-icon">&#xe60e;</i>聊天记录
+            </span>{{# }; }}</div><div class="layim-chat-textarea">
+        <textarea></textarea>
+    </div><div class="layim-chat-bottom">
+        <div class="layim-chat-send">{{# if(!d.base.brief){ }}<span class="layim-send-close" layim-event="closeThisChat">关闭
+        </span>{{# } }}<span class="layim-send-btn" layim-event="send">发送</span
+        ><span class="layim-send-set" layim-event="setSend" lay-type="show">
+            <em class="layui-edge"></em></span><ul class="layui-anim layim-menu-box"><li {{d.local.sendHotKey !== "Ctrl+Enter" ? "class=layim-this" : ""}} layim-event="setSend" lay-type="Enter"><i class="layui-icon">&#xe618;</i>按Enter键发送消息</li><li {{d.local.sendHotKey === "Ctrl+Enter" ? "class=layim-this" : ""}} layim-event="setSend"  lay-type="Ctrl+Enter"><i class="layui-icon">&#xe618;</i>按Ctrl+Enter键发送消息</li></ul></div></div></div></div>
+</body>
+</html>

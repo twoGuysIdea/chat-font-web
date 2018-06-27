@@ -63,7 +63,6 @@
             socket.onmessage = function(msg) {
                 var data = eval('(' + msg.data + ')');
                 if (data.status) {
-                    console.log(data);
                     if (data.type === 1) {
                         var user = {
                             name: '访客'+data.backMsg
@@ -73,7 +72,19 @@
                         };
                         active.chat(user);
                         $("#tip").hide();
-                    }else{
+                        var chatWindow = $(".layui-layer-close")[1];
+
+                        $(chatWindow).on('click', function(){
+                            socket.send("remove_random_friend");
+                            window.location.reload();
+                            //获得消息事件
+                        });
+                        $(".layim-send-close").on('click', function(){
+                            socket.send("remove_random_friend");
+                            window.location.reload();
+                            //获得消息事件
+                        });
+                    }else if(data.type === 2){
                         var backData = eval('(' + data.backMsg + ')');
                         var obj = {
                             username: backData.user
@@ -83,6 +94,13 @@
                             ,content: backData.message
                         };
                         layim.getMessage(obj);
+                    }else{
+                        console.log("关闭请求"+data);
+                        if ("remove_random_friend" === data.backMsg) {
+                            $(".layui-btn-danger").show();
+                            layer.msg("对方已经退出聊天");
+                            window.location.reload();
+                        }
                     }
                 }else{
                     layer.msg(data.backMsg);
@@ -292,7 +310,6 @@
             //监听聊天窗口的切换
             layim.on('chatChange', function(res){
                 var type = res.data.type;
-                console.log(res.data.id)
                 if(type === 'friend'){
                     //模拟标注好友状态
                     //layim.setChatStatus('<span style="color:#FF5722;">在线</span>');
@@ -305,6 +322,11 @@
                         ,content: '模拟群员'+(Math.random()*100|0) + '加入群聊'
                     });
                 }
+            });
+
+            //监听聊天窗口的切换
+            layim.on('closeThisChat', function(res){
+                console.log("close");
             });
 
 
@@ -530,6 +552,12 @@
                     });
                 }
             };
+
+            $('.layui-layer-close').on('click', function(){
+                console.log("click close");
+                // socket.send("search...");
+                //获得消息事件
+            });
 
             $('.layui-btn-danger').on('click', function(){
                 $(".layui-btn-danger").hide();
