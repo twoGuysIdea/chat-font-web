@@ -95,15 +95,19 @@
                         };
                         layim.getMessage(obj);
                     }else{
-                        console.log("关闭请求"+data);
                         if ("remove_random_friend" === data.backMsg) {
-                            $(".layui-btn-danger").show();
                             layer.msg("对方已经退出聊天");
-                            window.location.reload();
+                            setTimeout(function () {
+                                window.location.reload();
+                            },2000);
+
                         }
                     }
                 }else{
                     layer.msg(data.backMsg);
+                    setTimeout(function () {
+                        window.location.reload();
+                    },2000);
                 }
             };
 
