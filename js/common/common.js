@@ -45,7 +45,7 @@ function ajaxWrap(cOption) {
 //             return true;
 //         },
         success: function (data) {
-            ajaxWrapSuccess(data);
+        	ajaxWrapSuccess(data);
         },
         error: function (data) {
             alert("程序报错啦！快去报告程序猿");
@@ -56,7 +56,7 @@ function ajaxWrap(cOption) {
         // }
     };
     deOption = $.extend(deOption, cOption);
-    deOption.url = "http://192.168.11.136:8091"+cOption.url;
+    deOption.url = "http://localhost:8091"+cOption.url;
     console.log(deOption);
     $.ajax(deOption);
 }
@@ -66,7 +66,14 @@ function ajaxWrap(cOption) {
  * @param data
  */
 function ajaxWrapSuccess(data) {
-    if (data.hasOwnProperty("result")) {
+	alert("请求返回的结果:" + JSON.stringify(data))
+	if (data.code == 0) {
+		 layer.msg(data.message, {icon: 1, offset: '100px'});
+	} else {
+		layer.msg(data.message, {offset: '100px'});
+	}
+	
+    /*if (data.hasOwnProperty("result")) {
         // 老版的提示
         if (data.result === "ok") {
             layer.msg(data.object ? data.object : "操作成功", {icon: 1, offset: '100px'});
@@ -80,7 +87,7 @@ function ajaxWrapSuccess(data) {
         } else {
             layer.msg(data.msg, {offset: '100px'});
         }
-    }
+    }*/
 
 }
 

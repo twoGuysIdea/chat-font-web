@@ -45,7 +45,7 @@
 
         layui.use('layim', function(layim){
 
-            var socket = new WebSocket("ws://192.168.11.136:8091/webSocket/"+uuuid);
+            var socket = new WebSocket("ws://localhost:8091/webSocket/"+uuuid);
             //打开事件
             socket.onopen = function() {
                 console.log("Socket 已打开");
