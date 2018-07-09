@@ -36,7 +36,7 @@ function ajaxWrap(cOption) {
         contentType: "application/x-www-form-urlencoded; charset=utf-8",
 //            contentType : "application/json; charset=utf-8",
         dataType: 'json',
-        type: 'post',
+        type: 'post'
 //         beforeSend: function () {
 // //                loading层
 //             loading = layer.load(1, {
@@ -44,21 +44,14 @@ function ajaxWrap(cOption) {
 //             });
 //             return true;
 //         },
-        success: function (data) {
-            console.log(data.message);
-            if (data.code === 0) {
-                layer.msg(data.message);
-            } else {
-                layer.msg(data.message);
-            }
-        },
+        // complete: function () {
+        //     layer.close(loading);
+        // }
+        ,
         error: function (data) {
             alert("程序报错啦！快去报告程序猿");
 
         }
-        // complete: function () {
-        //     layer.close(loading);
-        // }
     };
     deOption = $.extend(deOption, cOption);
     deOption.url = "http://localhost:8091"+cOption.url;
