@@ -40,10 +40,12 @@
 
 <script type="text/javascript">
     $(function () {
-        $('#loginBtn').on('click', function(){
-            ajaxWrap({
-               url:"/user/info/login",
-               data:getFormParams($(".layui-form"))
+        layui.use('layer', function(layer){
+            $('#loginBtn').on('click', function(){
+                ajaxWrap({
+                    url:"/user/info/login",
+                    data:getFormParams($(".layui-form"))
+                });
             });
         });
     });

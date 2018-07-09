@@ -50,10 +50,10 @@
 <script src="../../js/layui/layui.js"></script>
 <script src="../../js/common/common.js"></script>
 <script type="text/javascript">
-    layui.use(['form', 'laydate'], function(){
+    layui.use(['form', 'laydate','layer'], function(){
         var form = layui.form
-            ,laydate = layui.laydate;
-        console.log(form);
+            ,laydate = layui.laydate
+            ,layer = layui.layer;
         //日期
         laydate.render({
             elem: '#birthday'

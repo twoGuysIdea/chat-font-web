@@ -30,7 +30,7 @@ function refreshDelay(ms) {
  * @param cOption
  */
 function ajaxWrap(cOption) {
-    var loading = null;
+    // var loading = null;
     var deOption = {
         async: true,
         contentType: "application/x-www-form-urlencoded; charset=utf-8",
@@ -45,50 +45,24 @@ function ajaxWrap(cOption) {
 //             return true;
 //         },
         success: function (data) {
-        	ajaxWrapSuccess(data);
+            console.log(data.message);
+            if (data.code === 0) {
+                layer.msg(data.message);
+            } else {
+                layer.msg(data.message);
+            }
         },
         error: function (data) {
             alert("程序报错啦！快去报告程序猿");
 
-        },
+        }
         // complete: function () {
         //     layer.close(loading);
         // }
     };
     deOption = $.extend(deOption, cOption);
     deOption.url = "http://localhost:8091"+cOption.url;
-    console.log(deOption);
     $.ajax(deOption);
-}
-
-/**
- * ajax提交成功后的success默认提示方法
- * @param data
- */
-function ajaxWrapSuccess(data) {
-	alert("请求返回的结果:" + JSON.stringify(data))
-	if (data.code == 0) {
-		 layer.msg(data.message, {icon: 1, offset: '100px'});
-	} else {
-		layer.msg(data.message, {offset: '100px'});
-	}
-	
-    /*if (data.hasOwnProperty("result")) {
-        // 老版的提示
-        if (data.result === "ok") {
-            layer.msg(data.object ? data.object : "操作成功", {icon: 1, offset: '100px'});
-        } else {
-            layer.msg(data.result, {offset: '100px'});
-        }
-    } else if (data.hasOwnProperty("status")) {
-        // 新版的提示
-        if (data.status === true) {
-            layer.msg(data.msg, {icon: 1, offset: '100px'});
-        } else {
-            layer.msg(data.msg, {offset: '100px'});
-        }
-    }*/
-
 }
 
 /**
