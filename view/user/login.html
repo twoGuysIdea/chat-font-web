@@ -45,15 +45,17 @@
                 ajaxWrap({
                     url:"/user/info/login",
                     data:getFormParams($(".layui-form")),
-                    success: function (data) {
-                        if (data.isSuccess) {
-                            layer.msg(data.message);
+                    success: function (rs) {
+                        if (rs.isSuccess) {
+                            layer.msg(rs.message);
                             setTimeout(function () {//设置2秒后关闭
                                 var index = parent.layer.getFrameIndex(window.name);//获取父页面iframe的id
                                 parent.layer.close(index);//调用父页面layer关闭iframe
+                                layer.msg("登陆成功O(∩_∩)O");
                             },2000);
+                            parent.window.location.href="http://localhost:8080/view/user/userIndex.html?"+rs.data;
                         } else {
-                            layer.msg(data.message);
+                            layer.msg(rs.message);
                         }
                     }
                 });

@@ -24,28 +24,49 @@
 <body>
 
 <script src="/js/layui/layui.js"></script>
+<script src="../../js/common/common.js"></script>
 <script>
 
     if(typeof(WebSocket) == "undefined") {
         console.log("您的浏览器不支持WebSocket");
     }else {
-        var uuuid = RndNum(4);//随机生成访客id
-
-        var currentUser = {};//访客类
-
-        currentUser.username = "访客"+ uuuid;//访客昵称
-
-        currentUser.id = uuuid;//访客id
-
-        currentUser.status = "online";//在线状态 online：在线、hide：隐身
-
-        currentUser.remark = "";//我的签名
+        var currentUser = {};//用户类
 
         currentUser.avatar = "http://cdn.firstlinkapp.com/upload/2016_6/1465575923433_33812.jpg";//我的头像
 
-        layui.use('layim', function(layim){
+        layui.use(['layim','layer'], function(){
+            var layim = layui.layim
+                ,layer = layui.layer
+                ,$ = layui.jquery;
+            $.ajax({
+                url:"http://localhost:8091/user/info/load/one/"+getUserIdByUrl(),
+                async: false,
+                contentType: "application/x-www-form-urlencoded; charset=utf-8",
+                dataType: 'json',
+                type: 'post',
+                success: function (rs) {
+                    if (rs.isSuccess) {
+                        var user = rs.data;
+                        console.log(user);
+                        currentUser.username = user.userName;//用户昵称
 
-            var socket = new WebSocket("ws://localhost:8091/webSocket/"+uuuid);
+                        currentUser.id = user.id;//用户id
+
+                        currentUser.status = "online";//在线状态 online：在线、hide：隐身
+
+                        currentUser.remark = user.sign;//我的签名
+                    } else {
+                        layer.msg(rs.message);
+                        return false;
+                    }
+                },
+                error: function (data) {
+                    alert("程序报错啦！快去报告程序猿");
+
+                }
+            });
+
+            var socket = new WebSocket("ws://localhost:8091/webSocket/"+currentUser.username);
             //打开事件
             socket.onopen = function() {
                 console.log("Socket 已打开");
@@ -65,7 +86,7 @@
                 if (data.status) {
                     if (data.type === 1) {
                         var user = {
-                            name: '访客'+data.backMsg
+                            name: data.backMsg
                             ,type: 'friend'
                             ,avatar: '//tva3.sinaimg.cn/crop.0.0.180.180.180/7f5f6861jw1e8qgp5bmzyj2050050aa8.jpg'
                             ,id: data.backMsg
@@ -121,9 +142,9 @@
                 // },
                 //或采用以下方式初始化接口
                 init: {
-                  mine: currentUser
-                  ,friend: []
-                  ,group: []
+                    mine: currentUser
+                    ,friend: []
+                    ,group: []
                 }
 
 
@@ -152,7 +173,7 @@
                 //     ,icon: '&#xe64e;'
                 // }]
 
-                ,brief: true //是否简约模式（若开启则不显示主面板）
+                // ,brief: true //是否简约模式（若开启则不显示主面板）
 
                 //,title: 'WebIM' //自定义主面板最小化时的标题
                 //,right: '100px' //主面板相对浏览器右侧距离
@@ -500,37 +521,10 @@
 
     }
 
-    function login() {
-        layer.open({
-            type: 2 //此处以iframe举例
-            ,title: '请保护好隐私'
-            ,area: ['35%', '55%']
-            ,shade: 0
-            ,maxmin: true
-            ,content: '../../view/user/login.html'
-            ,zIndex: layer.zIndex //重点1
-        });
-    }
-    
-    function registerUser() {
-        layer.open({
-            type: 2 //此处以iframe举例
-            ,title: '请保护好隐私'
-            ,area: ['35%', '90%']
-            ,shade: 0
-            ,maxmin: true
-            ,content: '../../view/user/register.html'
-            ,zIndex: layer.zIndex //重点1
-        });
-    }
-
-    //产生随机数函数
-    function RndNum(n){
-        var rnd="";
-        for(var i=0;i<n;i++){
-            rnd+=Math.floor(Math.random()*10);
-        }
-        return rnd;
+    //从url获取id
+    function getUserIdByUrl(){
+        var url = window.location.search;
+        return url.split("?")[1];
     }
 
     var hour,minute,second;//时 分 秒
@@ -552,16 +546,12 @@
 
 </script>
 </body>
-    <div class="layui-layout-right">
-        <button class="layui-btn layui-btn-primary layui-btn-radius" onclick="login()">登陆</button>
-        <button class="layui-btn layui-btn-normal layui-btn-radius" onclick="registerUser()">注册</button>
-    </div>
-    <div class="center-in-center">
-        <button class="layui-btn layui-btn-danger layui-btn-radius" id="search_math">开始匹配</button>
-        <p style="display: none" id="tip">正在匹配，请稍等。。。</p>
-    </div>
-    <div id="addFriend" style="display: none">
-        <button class="layui-btn layui-btn-warm layui-btn-radius" id="add_friend">添加好友</button>
-        <p id="chatTime"></p>
-    </div>
+<div class="center-in-center">
+    <button class="layui-btn layui-btn-danger layui-btn-radius" id="search_math">开始匹配</button>
+    <p style="display: none" id="tip">正在匹配，请稍等。。。</p>
+</div>
+<div id="addFriend" style="display: none">
+    <button class="layui-btn layui-btn-warm layui-btn-radius" id="add_friend">添加好友</button>
+    <p id="chatTime"></p>
+</div>
 </html>

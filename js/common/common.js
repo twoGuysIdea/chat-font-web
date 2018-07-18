@@ -32,7 +32,7 @@ function refreshDelay(ms) {
 function ajaxWrap(cOption) {
     // var loading = null;
     var deOption = {
-        async: true,
+        async: false,
         contentType: "application/x-www-form-urlencoded; charset=utf-8",
 //            contentType : "application/json; charset=utf-8",
         dataType: 'json',
