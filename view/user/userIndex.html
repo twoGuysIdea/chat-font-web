@@ -30,42 +30,12 @@
     if(typeof(WebSocket) == "undefined") {
         console.log("您的浏览器不支持WebSocket");
     }else {
-        var currentUser = {};//用户类
-
-        currentUser.avatar = "http://cdn.firstlinkapp.com/upload/2016_6/1465575923433_33812.jpg";//我的头像
 
         layui.use(['layim','layer'], function(){
             var layim = layui.layim
                 ,layer = layui.layer
                 ,$ = layui.jquery;
-            $.ajax({
-                url:"http://localhost:8091/user/info/load/one/"+getUserIdByUrl(),
-                async: false,
-                contentType: "application/x-www-form-urlencoded; charset=utf-8",
-                dataType: 'json',
-                type: 'post',
-                success: function (rs) {
-                    if (rs.isSuccess) {
-                        var user = rs.data;
-                        console.log(user);
-                        currentUser.username = user.userName;//用户昵称
-
-                        currentUser.id = user.id;//用户id
-
-                        currentUser.status = "online";//在线状态 online：在线、hide：隐身
-
-                        currentUser.remark = user.sign;//我的签名
-                    } else {
-                        layer.msg(rs.message);
-                        return false;
-                    }
-                },
-                error: function (data) {
-                    alert("程序报错啦！快去报告程序猿");
-
-                }
-            });
-
+            var currentUser = buildCurrentUser();
             var socket = new WebSocket("ws://localhost:8091/webSocket/"+currentUser.username);
             //打开事件
             socket.onopen = function() {
@@ -134,7 +104,6 @@
 
             //基础配置
             layim.config({
-
                 // //初始化接口
                 // init: {
                 //     url: '/view/master/json/getList.json'
@@ -142,8 +111,8 @@
                 // },
                 //或采用以下方式初始化接口
                 init: {
-                    mine: currentUser
-                    ,friend: []
+                    mine:currentUser
+                    ,friend: buildFriends()
                     ,group: []
                 }
 
@@ -281,7 +250,7 @@
             });
 
 
-            var $ = layui.jquery,active = {
+            var active = {
                 chat: function(user){
                     //自定义会话
                     layim.chat(user);
@@ -517,14 +486,89 @@
                 //获得消息事件
             });
 
+            function buildCurrentUser(){
+                var currentUser = {};//用户类
+
+                currentUser.avatar = "http://cdn.firstlinkapp.com/upload/2016_6/1465575923433_33812.jpg";//我的头像
+
+                $.ajax({
+                    url:"http://localhost:8091/user/info/load/one",
+                    async: false,
+                    contentType: "application/x-www-form-urlencoded; charset=utf-8",
+                    xhrFields:{withCredentials:true},
+                    dataType: 'json',
+                    type: 'post',
+                    success: function (rs) {
+                        if (rs.isSuccess) {
+                            var user = rs.data;
+                            console.log(user);
+                            currentUser.username = user.userName;//用户昵称
+
+                            currentUser.id = user.id;//用户id
+
+                            currentUser.status = "online";//在线状态 online：在线、hide：隐身
+
+                            currentUser.remark = user.sign;//我的签名
+                        } else {
+                            layer.msg(rs.message);
+                            return false;
+                        }
+                    },
+                    error: function (data) {
+                        alert("程序报错啦！快去报告程序猿");
+
+                    }
+                });
+                return currentUser;
+            }
+
+            function buildFriends(){
+                var userFriends = [];//好友列表信息
+                var friendList = [];//好友列表用户信息
+                userFriends.groupname = "我的好友";//测试
+                userFriends.id = 1;//测试
+                $.ajax({
+                    url:"http://localhost:8091/user/friend/list",
+                    async: false,
+                    contentType: "application/x-www-form-urlencoded; charset=utf-8",
+                    xhrFields:{withCredentials:true},
+                    dataType: 'json',
+                    type: 'post',
+                    success: function (rs) {
+                        if (rs.isSuccess) {
+                            var users = rs.data;
+                            for (var i = 0; i < users.length; i++) {
+                                var userFriend = {};
+                                userFriend.username = users[i].userName;//用户昵称
+
+                                userFriend.id = users[i].id;//用户id
+
+                                userFriend.status = "online";//在线状态 online：在线、hide：隐身
+
+                                userFriend.remark = users[i].sign;//我的签名
+
+                                currentUser.avatar = "http://cdn.firstlinkapp.com/upload/2016_6/1465575923433_33812.jpg";
+                                friendList.push(userFriend);
+                            }
+                        } else {
+                            layer.msg(rs.message);
+                            return false;
+                        }
+                    },
+                    error: function (data) {
+                        alert("程序报错啦！快去报告程序猿");
+
+                    }
+                });
+                userFriends.list = friendList;
+
+                console.log("当前用户的好友列表"+userFriends);
+
+                return userFriends;
+            }
+
         });
 
-    }
-
-    //从url获取id
-    function getUserIdByUrl(){
-        var url = window.location.search;
-        return url.split("?")[1];
     }
 
     var hour,minute,second;//时 分 秒

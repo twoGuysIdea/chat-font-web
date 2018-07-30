@@ -35,6 +35,7 @@ function ajaxWrap(cOption) {
         async: false,
         contentType: "application/x-www-form-urlencoded; charset=utf-8",
 //            contentType : "application/json; charset=utf-8",
+        xhrFields:{withCredentials:true},
         dataType: 'json',
         type: 'post'
 //         beforeSend: function () {
