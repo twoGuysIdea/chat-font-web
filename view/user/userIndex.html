@@ -492,14 +492,14 @@
                 currentUser.avatar = "http://cdn.firstlinkapp.com/upload/2016_6/1465575923433_33812.jpg";//我的头像
 
                 $.ajax({
-                    url:"http://localhost:8091/user/info/load/one",
+                    url:"http://localhost:8769/api-user/user/info/load/one?token="+localStorage.token,
                     async: false,
                     contentType: "application/x-www-form-urlencoded; charset=utf-8",
-                    xhrFields:{withCredentials:true},
+                    xhrFields:{withCredentials:false},
                     dataType: 'json',
                     type: 'post',
                     success: function (rs) {
-                        if (rs.isSuccess) {
+                        if (rs.code == 0) {
                             var user = rs.data;
                             console.log(user);
                             currentUser.username = user.userName;//用户昵称
@@ -509,8 +509,9 @@
                             currentUser.status = "online";//在线状态 online：在线、hide：隐身
 
                             currentUser.remark = user.sign;//我的签名
-                        } else {
-                            layer.msg(rs.message);
+                        } else {	
+                        	layer.msg(rs.message, {time:2000});
+                            window.location.href="http://localhost:8000/index.html";
                             return false;
                         }
                     },
@@ -528,14 +529,14 @@
                 userFriends.groupname = "我的好友";//测试
                 userFriends.id = 1;//测试
                 $.ajax({
-                    url:"http://localhost:8091/user/friend/list",
+                    url:"http://localhost:8769/api-user/user/friend/list?token=" + localStorage.token ,
                     async: false,
                     contentType: "application/x-www-form-urlencoded; charset=utf-8",
-                    xhrFields:{withCredentials:true},
+                    xhrFields:{withCredentials:false},
                     dataType: 'json',
                     type: 'post',
                     success: function (rs) {
-                        if (rs.isSuccess) {
+                        if (rs.code == 0) {
                             var users = rs.data;
                             for (var i = 0; i < users.length; i++) {
                                 var userFriend = {};
@@ -551,7 +552,9 @@
                                 friendList.push(userFriend);
                             }
                         } else {
-                            layer.msg(rs.message);
+                            layer.msg(rs.message, {time:2000});
+                           
+                            window.location.href="http://localhost:8000/index.html";
                             return false;
                         }
                     },

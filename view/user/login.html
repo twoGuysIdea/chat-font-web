@@ -46,14 +46,16 @@
                     url:"/user/info/login",
                     data:getFormParams($(".layui-form")),
                     success: function (rs) {
-                        if (rs.isSuccess) {
+                        if (rs.code == 0) {
                             layer.msg(rs.message);
+                            //数据写入浏览器缓存
+                            localStorage.token = rs.data;//token写入
                             setTimeout(function () {//设置2秒后关闭
                                 var index = parent.layer.getFrameIndex(window.name);//获取父页面iframe的id
                                 parent.layer.close(index);//调用父页面layer关闭iframe
                                 layer.msg("登陆成功O(∩_∩)O");
                             },2000);
-                            parent.window.location.href="http://localhost:8080/view/user/userIndex.html";
+                            parent.window.location.href="http://localhost:8000/view/user/userIndex.html";
                         } else {
                             layer.msg(rs.message);
                         }

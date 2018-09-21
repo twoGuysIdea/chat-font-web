@@ -35,7 +35,7 @@ function ajaxWrap(cOption) {
         async: false,
         contentType: "application/x-www-form-urlencoded; charset=utf-8",
 //            contentType : "application/json; charset=utf-8",
-        xhrFields:{withCredentials:true},
+        xhrFields:{withCredentials:false},
         dataType: 'json',
         type: 'post'
 //         beforeSend: function () {
@@ -55,7 +55,7 @@ function ajaxWrap(cOption) {
         }
     };
     deOption = $.extend(deOption, cOption);
-    deOption.url = "http://localhost:8091"+cOption.url;
+    deOption.url = "http://localhost:8769/api-user/"+cOption.url;
     $.ajax(deOption);
 }
 
